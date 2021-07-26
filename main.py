@@ -47,7 +47,7 @@ def create_db() -> None:
 
 
 def fill_db(file: dict) -> None:
-    """Фнукция, осуществляющая загрузку данных в базу данных."""
+    """Функция, осуществляющая добавление или изменение данных в БД."""
     global cursor
     global connection
     for key, value in file.items():
@@ -110,6 +110,4 @@ if __name__ == "__main__":
             print(row)
         for row in cursor.execute("""SELECT * FROM shops_goods"""):
             print(row)
-    else:
-        print("Невалидный json-файл, проверьте заполнение полей.")
     connection.close()

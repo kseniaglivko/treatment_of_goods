@@ -133,5 +133,8 @@ def validate_json(file: dict) -> bool:
 def load_data_from_json(path_to_file: str) -> dict:
     """Функция, осуществляющая чтение из файла и загрузку данных из файла в словарь."""
     with open(path_to_file, "r") as file:
-        data = json.load(file)
-        return data
+        try:
+            data = json.load(file)
+            return data
+        except json.decoder.JSONDecodeError:
+            print("Проверьте форматирование JSON-файла, обнаружены ошибки.")
