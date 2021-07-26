@@ -41,6 +41,7 @@ def create_db() -> None:
 def fill_db(file: dict) -> None:
     """Фнукция, осуществляющая загрузку данных в базу данных."""
     global cursor
+    global connection
     for key, value in file.items():
         if key == "id":
             id = value
@@ -56,3 +57,30 @@ def fill_db(file: dict) -> None:
                 location.append(element["location"])
                 amount.append(element["amount"])
 
+    if f"""SELECT * FROM goods WHERE id={id};""":
+        cursor.execute (
+            f"""
+            UPDATE goods SET name='{name}', package_height='{height}', package_width='{width}' WHERE id={id};
+            """
+        )
+        for element in range(len(location)):
+            cursor.execute(
+                """
+                UPDATE shops_goods SET amount='{amount[element]}' WHERE good_id={id} AND location='{location[element]}';
+                """
+            )
+        connection.commit()
+
+    else:
+        cursor.execute(
+            f"""
+            INSERT INTO goods VALUES ({id}, '{name}', '{height}', '{width}');
+            """
+        )
+        for element in range(len(location)):
+            cursor.execute(
+                """
+                INSERT INTO shops_goods VALUES ({id}, '{location[element]}', '{amount[element]}');
+                """
+            )
+        connection.commit()
