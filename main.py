@@ -1,11 +1,6 @@
-import psycopg2
+import sqlite3
 
-connection = psycopg2.connect(
-    dbname='treatment_of_goods',
-    user='dbuser',
-    password='dbpassword',
-    host='localhost'
-)
+connection = sqlite3.connect("treatment_of_goods.db")
 
 
 def create_db() -> None:
@@ -33,3 +28,5 @@ def create_db() -> None:
         """)
 
     connection.commit()
+
+
