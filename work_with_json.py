@@ -37,7 +37,6 @@ def validate_json(file: dict) -> bool:
             "package_params",
             "location_and_quantity"
         ],
-        "additionalProperties": false,
         "properties": {
             "id": {
                 "$id": "#/properties/id",
@@ -75,7 +74,6 @@ def validate_json(file: dict) -> bool:
                     "width",
                     "height"
                 ],
-                "additionalProperties": true,
                 "properties": {
                     "width": {
                         "$id": "#/properties/package_params/properties/width",
@@ -117,7 +115,6 @@ def validate_json(file: dict) -> bool:
                         }
                     ]
                 ],
-                "additionalItems": true,
                 "items": {
                     "anyOf": [
                         {
@@ -136,7 +133,6 @@ def validate_json(file: dict) -> bool:
                                 "location",
                                 "amount"
                             ],
-                            "additionalProperties": true,
                             "properties": {
                                 "location": {
                                     "$id": "#/properties/location_and_quantity/items/anyOf/0/properties/location",

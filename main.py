@@ -1,6 +1,6 @@
 import sqlite3
 import sys
-import work_with_json
+from work_with_json import load_data_from_json, validate_json
 
 """Передаем введенный через консоль путь до файла в переменную"""
 path_to_json = str(sys.argv[1])
@@ -22,7 +22,7 @@ def create_db() -> None:
                 name varchar(255) NOT NULL,
                 package_height float NOT NULL,
                 package_width float NOT NULL
-        );
+        )
         """)
 
     cursor.execute(
@@ -32,7 +32,7 @@ def create_db() -> None:
                 good_id integer REFERENCES goods (id) NOT NULL,
                 location varchar(255) NOT NULL,
                 amount integer NOT NULL
-        );
+        )
         """)
 
     connection.commit()
@@ -57,30 +57,47 @@ def fill_db(file: dict) -> None:
                 location.append(element["location"])
                 amount.append(element["amount"])
 
-    if f"""SELECT * FROM goods WHERE id={id};""":
-        cursor.execute (
+    if f"""SELECT * FROM goods WHERE id={id}""":
+        cursor.execute(
             f"""
-            UPDATE goods SET name='{name}', package_height='{height}', package_width='{width}' WHERE id={id};
+            UPDATE goods SET name='{name}', package_height='{height}', package_width='{width}' WHERE id={id}
             """
         )
         for element in range(len(location)):
             cursor.execute(
-                """
-                UPDATE shops_goods SET amount='{amount[element]}' WHERE good_id={id} AND location='{location[element]}';
+                f"""
+                UPDATE shops_goods SET amount='{amount[element]}' WHERE good_id={id} AND location='{location[element]}'
                 """
             )
         connection.commit()
+        print("Данные добавлены.")
 
     else:
         cursor.execute(
             f"""
-            INSERT INTO goods VALUES ({id}, '{name}', '{height}', '{width}');
+            INSERT INTO goods VALUES ({id}, '{name}', '{height}', '{width}')
             """
         )
         for element in range(len(location)):
             cursor.execute(
                 """
-                INSERT INTO shops_goods VALUES ({id}, '{location[element]}', '{amount[element]}');
+                INSERT INTO shops_goods VALUES ({id}, '{location[element]}', '{amount[element]}')
                 """
             )
         connection.commit()
+        print("Данные изменены.")
+
+
+if __name__ == '__main__':
+    create_db()
+    data = load_data_from_json(path_to_json)
+    if validate_json(data):
+        print("Загрузка прошла успешно, база данных обновлена.")
+        fill_db(data)
+        for row in cursor.execute("""SELECT * FROM goods"""):
+            print(row)
+        for row in cursor.execute("""SELECT * FROM shops_goods"""):
+            print(row)
+    else:
+        print("Невалидный json-файл, проверьте заполнение полей.")
+    connection.close()
