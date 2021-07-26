@@ -18,7 +18,7 @@ def create_db() -> None:
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS goods (
-                id integer NOT NULL,
+                id integer PRIMARY KEY AUTOINCREMENT,
                 name varchar(255) NOT NULL,
                 package_height float NOT NULL,
                 package_width float NOT NULL
@@ -28,10 +28,11 @@ def create_db() -> None:
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS shops_goods (
-                id integer NOT NULL,
-                good_id integer REFERENCES goods (id) NOT NULL,
+                id integer PRIMARY KEY AUTOINCREMENT,
+                good_id integer NOT NULL,
                 location varchar(255) NOT NULL,
-                amount integer NOT NULL
+                amount integer NOT NULL,
+                FOREIGN KEY (good_id)  REFERENCES goods (id)
         )
         """)
 
@@ -57,7 +58,9 @@ def fill_db(file: dict) -> None:
                 location.append(element["location"])
                 amount.append(element["amount"])
 
-    if f"""SELECT * FROM goods WHERE id={id}""":
+    cursor.execute(f"""SELECT * FROM goods WHERE id={id}""")
+    check = cursor.fetchone()
+    if check != None:
         cursor.execute(
             f"""
             UPDATE goods SET name='{name}', package_height='{height}', package_width='{width}' WHERE id={id}
@@ -75,13 +78,13 @@ def fill_db(file: dict) -> None:
     else:
         cursor.execute(
             f"""
-            INSERT INTO goods VALUES ({id}, '{name}', '{height}', '{width}')
+            INSERT INTO goods (id, name, package_height,package_width) VALUES ({id}, '{name}', '{height}', '{width}')
             """
         )
         for element in range(len(location)):
             cursor.execute(
-                """
-                INSERT INTO shops_goods VALUES ({id}, '{location[element]}', '{amount[element]}')
+                f"""
+                INSERT INTO shops_goods (good_id, location, amount) VALUES ({id}, '{location[element]}', '{amount[element]}')
                 """
             )
         connection.commit()
