@@ -1,8 +1,4 @@
-"""
-
-Модуль, в котором содержатся функции, предназначенные для обработки json-файл и передачи извлеченных данных в базу.
-
-"""
+"""Модуль, в котором содержатся функции, предназначенные для обработки json-файл и передачи извлеченных данных в базу."""
 
 
 import jsonschema
@@ -126,7 +122,7 @@ def validate_json(file: dict) -> bool:
     try:
         jsonschema.validate(file, schema)
     except jsonschema.exceptions.ValidationError:
-        return False
+        raise Exception("Проверьте заполнение JSON-файла, вероятно, отсутствуют некоторые поля.")
     return True
 
 
@@ -137,4 +133,4 @@ def load_data_from_json(path_to_file: str) -> dict:
             data = json.load(file)
             return data
         except json.decoder.JSONDecodeError:
-            print("Проверьте форматирование JSON-файла, обнаружены ошибки.")
+            raise Exception("Проверьте форматирование JSON-файла, обнаружены ошибки.")
