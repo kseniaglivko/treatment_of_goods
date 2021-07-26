@@ -1,3 +1,10 @@
+"""
+
+Модуль, в котором содержатся функции, предназначенные для обработки json-файл и передачи извлеченных данных в базу.
+
+"""
+
+
 import jsonschema
 import json
 
@@ -15,28 +22,14 @@ def validate_json(file: dict) -> bool:
             {
                 "id": 123,
                 "name": "Телевизор",
-                "package_params": {
-                    "width": 5,
-                    "height": 10
-                },
+                "package_params": {"width": 5, "height": 10},
                 "location_and_quantity": [
-                    {
-                        "location": "Магазин на Ленина",
-                        "amount": 7
-                    },
-                    {
-                        "location": "Магазин в центре",
-                        "amount": 3
-                    }
-                ]
+                    {"location": "Магазин на Ленина", "amount": 7},
+                    {"location": "Магазин в центре", "amount": 3},
+                ],
             }
         ],
-        "required": [
-            "id",
-            "name",
-            "package_params",
-            "location_and_quantity"
-        ],
+        "required": ["id", "name", "package_params", "location_and_quantity"],
         "properties": {
             "id": {
                 "$id": "#/properties/id",
@@ -44,9 +37,7 @@ def validate_json(file: dict) -> bool:
                 "title": "The id schema",
                 "description": "An explanation about the purpose of this instance.",
                 "default": 0,
-                "examples": [
-                    123
-                ]
+                "examples": [123],
             },
             "name": {
                 "$id": "#/properties/name",
@@ -54,9 +45,7 @@ def validate_json(file: dict) -> bool:
                 "title": "The name schema",
                 "description": "An explanation about the purpose of this instance.",
                 "default": "",
-                "examples": [
-                    "Телевизор"
-                ]
+                "examples": ["Телевизор"],
             },
             "package_params": {
                 "$id": "#/properties/package_params",
@@ -64,16 +53,8 @@ def validate_json(file: dict) -> bool:
                 "title": "The package_params schema",
                 "description": "An explanation about the purpose of this instance.",
                 "default": {},
-                "examples": [
-                    {
-                        "width": 5,
-                        "height": 10
-                    }
-                ],
-                "required": [
-                    "width",
-                    "height"
-                ],
+                "examples": [{"width": 5, "height": 10}],
+                "required": ["width", "height"],
                 "properties": {
                     "width": {
                         "$id": "#/properties/package_params/properties/width",
@@ -81,9 +62,7 @@ def validate_json(file: dict) -> bool:
                         "title": "The width schema",
                         "description": "An explanation about the purpose of this instance.",
                         "default": 0,
-                        "examples": [
-                            5
-                        ]
+                        "examples": [5],
                     },
                     "height": {
                         "$id": "#/properties/package_params/properties/height",
@@ -91,11 +70,9 @@ def validate_json(file: dict) -> bool:
                         "title": "The height schema",
                         "description": "An explanation about the purpose of this instance.",
                         "default": 0,
-                        "examples": [
-                            10
-                        ]
-                    }
-                }
+                        "examples": [10],
+                    },
+                },
             },
             "location_and_quantity": {
                 "$id": "#/properties/location_and_quantity",
@@ -105,14 +82,8 @@ def validate_json(file: dict) -> bool:
                 "default": [],
                 "examples": [
                     [
-                        {
-                            "location": "Магазин на Ленина",
-                            "amount": 7
-                        },
-                        {
-                            "location": "Магазин в центре",
-                            "amount": 3
-                        }
+                        {"location": "Магазин на Ленина", "amount": 7},
+                        {"location": "Магазин в центре", "amount": 3},
                     ]
                 ],
                 "items": {
@@ -124,15 +95,9 @@ def validate_json(file: dict) -> bool:
                             "description": "An explanation about the purpose of this instance.",
                             "default": {},
                             "examples": [
-                                {
-                                    "location": "Магазин на Ленина",
-                                    "amount": 7
-                                }
+                                {"location": "Магазин на Ленина", "amount": 7}
                             ],
-                            "required": [
-                                "location",
-                                "amount"
-                            ],
+                            "required": ["location", "amount"],
                             "properties": {
                                 "location": {
                                     "$id": "#/properties/location_and_quantity/items/anyOf/0/properties/location",
@@ -140,9 +105,7 @@ def validate_json(file: dict) -> bool:
                                     "title": "The location schema",
                                     "description": "An explanation about the purpose of this instance.",
                                     "default": "",
-                                    "examples": [
-                                        "Магазин на Ленина"
-                                    ]
+                                    "examples": ["Магазин на Ленина"],
                                 },
                                 "amount": {
                                     "$id": "#/properties/location_and_quantity/items/anyOf/0/properties/amount",
@@ -150,17 +113,15 @@ def validate_json(file: dict) -> bool:
                                     "title": "The amount schema",
                                     "description": "An explanation about the purpose of this instance.",
                                     "default": 0,
-                                    "examples": [
-                                        7
-                                    ]
-                                }
-                            }
+                                    "examples": [7],
+                                },
+                            },
                         }
                     ],
-                    "$id": "#/properties/location_and_quantity/items"
-                }
-            }
-        }
+                    "$id": "#/properties/location_and_quantity/items",
+                },
+            },
+        },
     }
     try:
         jsonschema.validate(file, schema)
