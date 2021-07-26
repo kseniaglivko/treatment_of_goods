@@ -8,10 +8,12 @@ path_to_json = str(sys.argv[1])
 
 connection = sqlite3.connect("treatment_of_goods.db")
 
+cursor = connection.cursor()
+
 
 def create_db() -> None:
     """Содание базы данных, а именно: две основные таблицы 'goods' и 'shops_goods'"""
-    cursor = connection.cursor()
+    global cursor
 
     cursor.execute(
         """
@@ -35,4 +37,22 @@ def create_db() -> None:
 
     connection.commit()
 
+
+def fill_db(file: dict) -> None:
+    """Фнукция, осуществляющая загрузку данных в базу данных."""
+    global cursor
+    for key, value in file.items():
+        if key == "id":
+            id = value
+        if key == "name":
+            name = value
+        if key == "package_params":
+            width = value["width"]
+            height = value["height"]
+        if key == "location_and_quantity":
+            location = list()
+            amount = list()
+            for element in value:
+                location.append(element["location"])
+                amount.append(element["amount"])
 
