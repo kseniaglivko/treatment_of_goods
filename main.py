@@ -1,4 +1,10 @@
 import sqlite3
+import sys
+import work_with_json
+
+"""Передаем введенный через консоль путь до файла в переменную"""
+path_to_json = str(sys.argv[1])
+
 
 connection = sqlite3.connect("treatment_of_goods.db")
 
